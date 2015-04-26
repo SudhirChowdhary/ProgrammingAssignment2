@@ -13,14 +13,14 @@
 
 makeCacheMatrix <- function(x = matrix()) {
         ## <<- Operator cause a search to made through parent environments for an existing definition of the variable being assigned
-        inv <- NULL ## Initialize the Values to NULL
+        inv_Mat <- NULL ## Initialize the Values to NULL
         set <- function(y) {
                 x <<- y  ## Cache the matrix
-                inv <<- NULL  ## set the value of inv to NULL
+                inv_Mat <<- NULL  ## set the value of inv_Mat to NULL
         }
         get <- function() x
-        setinverse <- function(inverse) inv <<- inverse
-        getinverse <- function() inv
+        setinverse <- function(inverse) inv_Mat <<- inverse
+        getinverse <- function() inv_Mat
         list(set=set, get=get, setinverse=setinverse, getinverse=getinverse)
 }
 
@@ -29,17 +29,18 @@ makeCacheMatrix <- function(x = matrix()) {
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
-        inv <- x$getinverse()
-        ## For the first time, inv will have NULL value. Second time, the value will be <> NULL
-        if(!is.null(inv)) {
-                message("Cached Data")
-                return(inv)
+        inv_Mat <- x$getinverse()
+        ## For the first time, inv_Mat will have NULL value. Second time, the value will be <> NULL
+        ## Because it will be assigned by setinverse function from makeCacheMatrix
+        if(!is.null(inv_Mat)) {
+                message("Values of inv_Mat/ Cached Data from Another Environment")
+                return(inv_Mat)
         }
         data <- x$get()
         ## Compute the value of inverse-input-matrix
-        inv <- solve(data)
-        ## Sets the value of inv to <> NULL, so that we get the value from other environment.
-        x$setinverse(inv)
-        ## Return the inverse "inv" value.
-        inv
+        inv_Mat <- solve(data)
+        ## Sets the value of inv_Mat to <> NULL, so that we get the value from other environment.
+        x$setinverse(inv_Mat)
+        ## Return the inverse "inv_Mat" value.
+        inv_Mat
 }
